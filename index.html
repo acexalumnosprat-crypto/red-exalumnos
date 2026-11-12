@@ -111,7 +111,7 @@
         // Botón directo a redes sociales o WhatsApp
         let botonRedSocial = '';
         if (item.contacto_valor && item.contacto_valor.startsWith('http')) {
-          botonRedSocial = `<a href="${item.contacto_valor}" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 hover:opacity-90 text-white font-semibold text-sm py-2.5 px-5 rounded-xl transition-all shadow-sm">Ver en Instagram / Redes ↗</a>`;
+          botonRedSocial = `<a href="${item.contacto_valor}" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 hover:opacity-90 text-white font-semibold text-sm py-2.5 px-5 rounded-xl transition-all shadow-sm">Ver Más ↗</a>`;
         } else if (item.contacto_tipo === 'whatsapp') {
           botonRedSocial = `<a href="https://wa.me/${item.contacto_valor}" target="_blank" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm py-2.5 px-5 rounded-xl transition-all shadow-sm">Contactar por WhatsApp 💬</a>`;
         } else {
