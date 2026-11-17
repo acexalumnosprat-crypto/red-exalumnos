@@ -104,6 +104,42 @@
             });
         }
 
+        // Función reutilizable para generar cada botón de contacto
+        function crearBotonContacto(tipoRaw, valorRaw) {
+            let valorContacto = valorRaw ? valorRaw.trim() : '';
+            if (!valorContacto) return ''; // Si la celda está vacía, no crea botón
+
+            let tipoContacto = tipoRaw ? tipoRaw.toLowerCase().trim() : '';
+            let enlaceBtn = '';
+            let textoBtn = '';
+            let claseBtn = '';
+            let atributosExtra = 'target="_blank" rel="noopener noreferrer"';
+
+            if (tipoContacto === 'whatsapp') {
+                enlaceBtn = `https://wa.me/${valorContacto.replace(/\D/g, '')}`;
+                textoBtn = 'Contactar por WhatsApp 💬';
+                claseBtn = 'bg-emerald-600 hover:bg-emerald-700 text-white';
+            } else if (tipoContacto === 'email' || tipoContacto === 'correo') {
+                enlaceBtn = `mailto:${valorContacto}`;
+                textoBtn = 'Enviar correo ✉️';
+                claseBtn = 'bg-blue-600 hover:bg-blue-700 text-white';
+                atributosExtra = '';
+            } else if (tipoContacto === 'telefono' || tipoContacto === 'teléfono') {
+                enlaceBtn = `tel:${valorContacto.replace(/\s+/g, '')}`;
+                textoBtn = 'Llamar 📞';
+                claseBtn = 'bg-slate-700 hover:bg-slate-800 text-white';
+                atributosExtra = '';
+            } else {
+                enlaceBtn = valorContacto.startsWith('http') ? valorContacto : `https://${valorContacto}`;
+                textoBtn = 'Ver sitio ↗';
+                claseBtn = 'bg-purple-600 hover:bg-purple-700 text-white';
+            }
+
+            return `<a href="${enlaceBtn}" ${atributosExtra} class="w-full inline-flex justify-center items-center px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm transition-all ${claseBtn}">
+                        ${textoBtn}
+                    </a>`;
+        }
+
         function mostrarPublicaciones(datos) {
             const contenedor = document.getElementById('contenedor-publicaciones');
             contenedor.innerHTML = '';
@@ -114,35 +150,9 @@
             }
 
             datos.forEach(pub => {
-                // --- INICIO DEL BLOQUE CORREGIDO ---
-                let tipoContacto = pub.contacto_tipo ? pub.contacto_tipo.toLowerCase().trim() : '';
-                let valorContacto = pub.contacto_valor ? pub.contacto_valor.trim() : '';
-                let enlaceBtn = '';
-                let textoBtn = '';
-                let claseBtn = '';
-                let atributosExtra = 'target="_blank" rel="noopener noreferrer"';
-
-                if (tipoContacto === 'whatsapp') {
-                    enlaceBtn = `https://wa.me/${valorContacto.replace(/\D/g, '')}`;
-                    textoBtn = 'Contactar por WhatsApp 💬';
-                    claseBtn = 'bg-emerald-600 hover:bg-emerald-700 text-white';
-                } else if (tipoContacto === 'email' || tipoContacto === 'correo') {
-                    enlaceBtn = `mailto:${valorContacto}`;
-                    textoBtn = 'Enviar correo ✉️';
-                    claseBtn = 'bg-blue-600 hover:bg-blue-700 text-white';
-                    atributosExtra = '';
-                } else {
-                    enlaceBtn = valorContacto.startsWith('http') ? valorContacto : `https://${valorContacto}`;
-                    textoBtn = 'Ver sitio ↗';
-                    claseBtn = 'bg-purple-600 hover:bg-purple-700 text-white';
-                }
-
-                let botonHTML = valorContacto 
-                    ? `<a href="${enlaceBtn}" ${atributosExtra} class="w-full md:w-auto inline-flex justify-center items-center px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm transition-all ${claseBtn}">
-                            ${textoBtn}
-                       </a>`
-                    : '';
-                // --- FIN DEL BLOQUE CORREGIDO ---
+                // Generamos ambos botones (si el segundo está vacío, devuelve '')
+                let boton1HTML = crearBotonContacto(pub.contacto_tipo, pub.contacto_valor);
+                let boton2HTML = crearBotonContacto(pub.contacto_tipo_2, pub.contacto_valor_2);
 
                 let tarjeta = document.createElement('div');
                 tarjeta.className = 'bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:shadow-md transition-shadow border-l-4 border-l-red-600';
@@ -157,8 +167,9 @@
                         <p class="text-sm font-semibold text-red-600">${pub.organizacion}</p>
                         <p class="text-sm text-gray-600 leading-relaxed">${pub.descripcion}</p>
                     </div>
-                    <div class="w-full md:w-auto flex-shrink-0">
-                        ${botonHTML}
+                    <div class="w-full md:w-56 flex-shrink-0 flex flex-col gap-2">
+                        ${boton1HTML}
+                        ${boton2HTML}
                     </div>
                 `;
                 contenedor.appendChild(tarjeta);
