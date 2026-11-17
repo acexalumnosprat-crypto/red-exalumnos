@@ -50,10 +50,11 @@
 
     </main>
 
-    <!-- PIE DE PÁGINA -->
-    <footer class="bg-[#0d233a] text-white text-center py-6 mt-12 border-t-4 border-yellow-400 text-sm">
-        <p class="font-semibold">Red de Exalumnos • Colegio Arturo Prat Ch. (Valparaíso)</p>
-        <p class="text-yellow-200 text-xs mt-1">Conectando y apoyando el talento de nuestra comunidad.</p>
+    <!-- PIE DE PÁGINA ACTUALIZADO -->
+    <footer class="bg-[#0d233a] text-white text-center py-6 mt-12 border-t-4 border-yellow-400 text-sm space-y-1">
+        <p class="font-semibold">Red de Exalumnos • Colegio Arturo Prat Ch. (Chile)</p>
+        <p class="text-yellow-200 text-xs">Conectando y apoyando el talento de nuestra comunidad.</p>
+        <p class="text-gray-400 text-xs pt-2">Creado y actualizado por Alejandra Vásquez A. Todos los derechos reservados.</p>
     </footer>
 
     <!-- LÓGICA JAVASCRIPT -->
@@ -87,18 +88,11 @@
             let atributos = 'target="_blank" rel="noopener noreferrer"';
 
             if (tipo === 'whatsapp') {
-                enlace = `https://wa.me/${valor.replace(/\D/g, '')}`;
-                texto = esSegundoBoton ? 'Contacto 💬' : 'WhatsApp 💬';
-            } else if (tipo === 'email' || tipo === 'correo') {
-                enlace = `mailto:${valor}`;
+                enlace = `https://wa.me/${valor.replace(/\D/g, '')}`; texto = esSegundoBoton ? 'Contacto 💬' : 'WhatsApp 💬'; } else if (tipo === 'email' \vert{}\vert{} tipo === 'correo') { enlace = `mailto:${valor}`;
                 texto = esSegundoBoton ? 'Contacto ✉️' : 'Correo ✉️';
                 atributos = '';
             } else if (tipo === 'telefono' || tipo === 'teléfono') {
-                enlace = `tel:${valor.replace(/\s+/g, '')}`;
-                texto = esSegundoBoton ? 'Contacto 📞' : 'Llamar 📞';
-                atributos = '';
-            } else {
-                enlace = valor.startsWith('http') ? valor : `https://${valor}`;
+                enlace = `tel:${valor.replace(/\s+/g, '')}`; texto = esSegundoBoton ? 'Contacto 📞' : 'Llamar 📞'; atributos = ''; } else { enlace = valor.startsWith('http') ? valor : `https://${valor}`;
                 texto = esSegundoBoton ? 'Contacto ↗' : 'Ver sitio ↗';
             }
 
@@ -141,7 +135,7 @@
                     <div class="space-y-2 flex-grow">
                         <div class="flex items-center gap-2">
                             <span class="px-2.5 py-0.5 text-xs font-bold rounded-full ${pub.categoria === 'Emprendimiento' ? 'bg-blue-50 text-blue-800 border border-blue-200' : 'bg-amber-50 text-amber-800 border border-amber-200'}">${pub.categoria}</span>
-                            <span class="text-xs text-gray-500 flex items-center gap-1 font-medium">📍 ${pub.comuna || 'Valparaíso'}</span>
+                            <span class="text-xs text-gray-500 flex items-center gap-1 font-medium">📍 ${pub.comuna || 'Chile'}</span>
                         </div>
                         <h2 class="text-xl font-bold text-[#0d233a]">${pub.titulo}</h2>
                         <p class="text-sm font-semibold text-red-600">${pub.organizacion}</p>
