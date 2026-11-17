@@ -50,7 +50,7 @@
 
     </main>
 
-    <!-- PIE DE PÁGINA (Con el Azul Institucional) -->
+    <!-- PIE DE PÁGINA -->
     <footer class="bg-[#0d233a] text-white text-center py-6 mt-12 border-t-4 border-yellow-400 text-sm">
         <p class="font-semibold">Red de Exalumnos • Colegio Arturo Prat Ch. (Valparaíso)</p>
         <p class="text-yellow-200 text-xs mt-1">Conectando y apoyando el talento de nuestra comunidad.</p>
@@ -120,14 +120,14 @@
 
                 let botonesHTML = '';
 
-                // Botón principal (Estilo Azul Marino Institucional)
+                // Botón principal
                 if (datosBtn1) {
                     botonesHTML += `<a href="${datosBtn1.enlace}" ${datosBtn1.atributos} class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm transition-all bg-[#0d233a] hover:bg-[#163558] text-white whitespace-nowrap text-center">
                         ${datosBtn1.texto}
                     </a>`;
                 }
 
-                // Segundo botón (Estilo Rojo Institucional para destacar el contacto)
+                // Segundo botón (Contacto)
                 if (datosBtn2) {
                     botonesHTML += `<a href="${datosBtn2.enlace}" ${datosBtn2.atributos} class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm transition-all bg-red-600 hover:bg-red-700 text-white whitespace-nowrap text-center">
                         ${datosBtn2.texto}
@@ -135,5 +135,46 @@
                 }
 
                 let tarjeta = document.createElement('div');
-                // Borde izquierdo rojo institucional en las tarjetas
-                tarjeta.
+                tarjeta.className = 'bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:shadow-md transition-shadow border-l-4 border-l-red-600';
+                
+                tarjeta.innerHTML = `
+                    <div class="space-y-2 flex-grow">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 text-xs font-bold rounded-full ${pub.categoria === 'Emprendimiento' ? 'bg-blue-50 text-blue-800 border border-blue-200' : 'bg-amber-50 text-amber-800 border border-amber-200'}">${pub.categoria}</span>
+                            <span class="text-xs text-gray-500 flex items-center gap-1 font-medium">📍 ${pub.comuna || 'Valparaíso'}</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-[#0d233a]">${pub.titulo}</h2>
+                        <p class="text-sm font-semibold text-red-600">${pub.organizacion}</p>
+                        <p class="text-sm text-gray-600 leading-relaxed">${pub.descripcion}</p>
+                    </div>
+                    <div class="w-full md:w-auto flex flex-wrap items-center justify-end gap-2 flex-shrink-0">
+                        ${botonesHTML}
+                    </div>
+                `;
+                contenedor.appendChild(tarjeta);
+            });
+        }
+
+        function filtrar() {
+            const texto = document.getElementById('buscador').value.toLowerCase();
+            const tipo = document.getElementById('filtroTipo').value;
+
+            const filtrados = listaPublicaciones.filter(pub => {
+                const coincideTexto = (pub.titulo && pub.titulo.toLowerCase().includes(texto)) ||
+                                     (pub.descripcion && pub.descripcion.toLowerCase().includes(texto)) ||
+                                     (pub.organizacion && pub.organizacion.toLowerCase().includes(texto)) ||
+                                     (pub.comuna && pub.comuna.toLowerCase().includes(texto));
+                const coincideTipo = tipo === "" || pub.categoria === tipo;
+                return coincideTexto && coincideTipo;
+            });
+
+            mostrarPublicaciones(filtrados);
+        }
+
+        document.getElementById('buscador').addEventListener('input', filtrar);
+        document.getElementById('filtroTipo').addEventListener('change', filtrar);
+
+        window.onload = cargarDatos;
+    </script>
+</body>
+</html>
