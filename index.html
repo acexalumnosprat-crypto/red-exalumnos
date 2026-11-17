@@ -16,7 +16,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
 
-    <!-- ENCABEZADO CON TU BANNER.JPG -->
+    <!-- ENCABEZADO CON BANNER -->
     <header class="banner-bg shadow-md border-b-4 border-yellow-400">
         <div class="max-w-6xl mx-auto">
             <img src="banner.jpg" alt="Comunidad de Exalumnos - Colegio Arturo Prat Ch" class="w-full h-auto object-contain mx-auto block">
@@ -45,12 +45,12 @@
 
         <!-- CONTENEDOR DE TARJETAS -->
         <div id="contenedor-publicaciones" class="space-y-4">
-            <div class="text-center py-12 text-gray-400">Cargando directorio de la comunidad...</div>
+            <div class="text-center py-12 text-gray-400 font-medium">Cargando directorio de la comunidad...</div>
         </div>
 
     </main>
 
-    <!-- PIE DE PÁGINA ACTUALIZADO -->
+    <!-- PIE DE PÁGINA -->
     <footer class="bg-[#0d233a] text-white text-center py-6 mt-12 border-t-4 border-yellow-400 text-sm space-y-1">
         <p class="font-semibold">Red de Exalumnos • Colegio Arturo Prat Ch. (Chile)</p>
         <p class="text-yellow-200 text-xs">Conectando y apoyando el talento de nuestra comunidad.</p>
@@ -63,11 +63,13 @@
         let listaPublicaciones = [];
 
         function cargarDatos() {
+            localStorage.clear();
+
             Papa.parse(URL_CSV, {
                 download: true,
                 header: true,
                 complete: function(results) {
-                    listaPublicaciones = results.data.filter(item => item.id && item.estado && item.estado.toLowerCase() === 'activo');
+                    listaPublicaciones = results.data.filter(item => item.id && item.estado && item.estado.toLowerCase().trim() === 'activo');
                     mostrarPublicaciones(listaPublicaciones);
                 },
                 error: function(err) {
@@ -88,11 +90,18 @@
             let atributos = 'target="_blank" rel="noopener noreferrer"';
 
             if (tipo === 'whatsapp') {
-                enlace = `https://wa.me/${valor.replace(/\D/g, '')}`; texto = esSegundoBoton ? 'Contacto 💬' : 'WhatsApp 💬'; } else if (tipo === 'email' \vert{}\vert{} tipo === 'correo') { enlace = `mailto:${valor}`;
+                enlace = `https://wa.me/${valor.replace(/\D/g, '')}`;
+                texto = esSegundoBoton ? 'Contacto 💬' : 'WhatsApp 💬';
+            } else if (tipo === 'email' || tipo === 'correo') {
+                enlace = `mailto:${valor}`;
                 texto = esSegundoBoton ? 'Contacto ✉️' : 'Correo ✉️';
                 atributos = '';
             } else if (tipo === 'telefono' || tipo === 'teléfono') {
-                enlace = `tel:${valor.replace(/\s+/g, '')}`; texto = esSegundoBoton ? 'Contacto 📞' : 'Llamar 📞'; atributos = ''; } else { enlace = valor.startsWith('http') ? valor : `https://${valor}`;
+                enlace = `tel:${valor.replace(/\s+/g, '')}`;
+                texto = esSegundoBoton ? 'Contacto 📞' : 'Llamar 📞';
+                atributos = '';
+            } else {
+                enlace = valor.startsWith('http') ? valor : `https://${valor}`;
                 texto = esSegundoBoton ? 'Contacto ↗' : 'Ver sitio ↗';
             }
 
@@ -104,7 +113,7 @@
             contenedor.innerHTML = '';
 
             if (datos.length === 0) {
-                contenedor.innerHTML = '<p class="text-center text-gray-500 py-12 bg-white rounded-xl border border-gray-200">No se encontraron emprendimientos o servicios con esos criterios.</p>';
+                contenedor.innerHTML = '<p class="text-center text-gray-500 py-12 bg-white rounded-xl border border-gray-200">No se encontraron emprendimientos o servicios activos con esos criterios.</p>';
                 return;
             }
 
@@ -114,14 +123,12 @@
 
                 let botonesHTML = '';
 
-                // Botón principal
                 if (datosBtn1) {
                     botonesHTML += `<a href="${datosBtn1.enlace}" ${datosBtn1.atributos} class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm transition-all bg-[#0d233a] hover:bg-[#163558] text-white whitespace-nowrap text-center">
                         ${datosBtn1.texto}
                     </a>`;
                 }
 
-                // Segundo botón (Contacto)
                 if (datosBtn2) {
                     botonesHTML += `<a href="${datosBtn2.enlace}" ${datosBtn2.atributos} class="px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm transition-all bg-red-600 hover:bg-red-700 text-white whitespace-nowrap text-center">
                         ${datosBtn2.texto}
@@ -134,12 +141,12 @@
                 tarjeta.innerHTML = `
                     <div class="space-y-2 flex-grow">
                         <div class="flex items-center gap-2">
-                            <span class="px-2.5 py-0.5 text-xs font-bold rounded-full ${pub.categoria === 'Emprendimiento' ? 'bg-blue-50 text-blue-800 border border-blue-200' : 'bg-amber-50 text-amber-800 border border-amber-200'}">${pub.categoria}</span>
+                            <span class="px-2.5 py-0.5 text-xs font-bold rounded-full ${pub.categoria === 'Emprendimiento' ? 'bg-blue-50 text-blue-800 border border-blue-200' : 'bg-amber-50 text-amber-800 border border-amber-200'}">${pub.categoria || 'Emprendimiento'}</span>
                             <span class="text-xs text-gray-500 flex items-center gap-1 font-medium">📍 ${pub.comuna || 'Chile'}</span>
                         </div>
-                        <h2 class="text-xl font-bold text-[#0d233a]">${pub.titulo}</h2>
-                        <p class="text-sm font-semibold text-red-600">${pub.organizacion}</p>
-                        <p class="text-sm text-gray-600 leading-relaxed">${pub.descripcion}</p>
+                        <h2 class="text-xl font-bold text-[#0d233a]">${pub.titulo || ''}</h2>
+                        <p class="text-sm font-semibold text-red-600">${pub.organizacion || ''}</p>
+                        <p class="text-sm text-gray-600 leading-relaxed">${pub.descripcion || ''}</p>
                     </div>
                     <div class="w-full md:w-auto flex flex-wrap items-center justify-end gap-2 flex-shrink-0">
                         ${botonesHTML}
@@ -154,11 +161,13 @@
             const tipo = document.getElementById('filtroTipo').value;
 
             const filtrados = listaPublicaciones.filter(pub => {
-                const coincideTexto = (pub.titulo && pub.titulo.toLowerCase().includes(texto)) ||
-                                     (pub.descripcion && pub.descripcion.toLowerCase().includes(texto)) ||
-                                     (pub.organizacion && pub.organizacion.toLowerCase().includes(texto)) ||
-                                     (pub.comuna && pub.comuna.toLowerCase().includes(texto));
-                const coincideTipo = tipo === "" || pub.categoria === tipo;
+                const titulo = pub.titulo ? pub.titulo.toLowerCase() : '';
+                const desc = pub.descripcion ? pub.descripcion.toLowerCase() : '';
+                const org = pub.organizacion ? pub.organizacion.toLowerCase() : '';
+                const comuna = pub.comuna ? pub.comuna.toLowerCase() : '';
+
+                const coincideTexto = titulo.includes(texto) || desc.includes(texto) || org.includes(texto) || comuna.includes(texto);
+                const coincideTipo = tipo === "" || (pub.categoria && pub.categoria.toLowerCase() === tipo.toLowerCase());
                 return coincideTexto && coincideTipo;
             });
 
